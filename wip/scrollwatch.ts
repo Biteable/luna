@@ -56,6 +56,7 @@ import { clamp } from "../math/clamp"
 interface RootData {
   scrollX: number
   scrollY: number
+  scrollHeight: number
   direction: Down | Up
   width: number
   height: number
@@ -82,7 +83,7 @@ interface IntersectionData {
 
 type Down = "+"
 type Up = "-"
-type ScrollCallback = (data: ScrollData) => any
+export type ScrollCallback = (data: ScrollData) => any
 type Threshold = number //
 
 // @todo returns intersecting data:
@@ -180,6 +181,7 @@ function onScroll () {
   const root: RootData = {
     scrollX: w.scrollX,
     scrollY: w.scrollY,
+    scrollHeight: html.scrollHeight,
     direction: w.scrollY >= lastScrollY ? down : up,
     width: html.clientWidth, // * clientWidth vs offsetWidth
     height: html.clientHeight,

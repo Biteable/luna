@@ -14,10 +14,13 @@
 
 export type RGBA = [r: number, g: number, b: number, a?: number]
 
-// const interpolateRGB = function (color1: RGBA, color2: RGBA, factor: number) {
-
-export const interpolateRGB = function (color1: RGBA, color2: RGBA, factor: number) {
+export const interpolateRGB = (
+  color1: RGBA,
+  color2: RGBA,
+  factor: number
+): RGBA => {
   // factor = clamp(0, factor, 1)
+  factor = factor > 1 ? 1 : factor < 0 ? 0 : factor // clamp
 
   const [ r1, g1, b1, a1 = 1 ] = color1
   const [ r2, g2, b2, a2 = 1 ] = color2

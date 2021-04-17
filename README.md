@@ -35,6 +35,31 @@ Watch:
 yarn watch
 ```
 
+### Building demo code
+
+`yarn demo-index` and `yarn demo-scroll` will bundle the respective code in the `demo` dir for the browser.
+
+To view the demo html files:
+
+```
+cd demo
+python -m SimpleHTTPServer 8080
+```
+
+For specific browser targetting you might want to try:
+
+```
+npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge79 --outfile=demo/scroll.bundle.js
+```
+
+## To do
+
+- [ ] noscript tags run in old browsers
+- [ ] component (like Veneer)
+- [ ] video player
+- [ ] server to replace python method
+- [-] ~~Move from yarn to npm~~ It's still not as fast as yarn
+
 
 ## Purpose
 
