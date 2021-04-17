@@ -54,6 +54,7 @@ npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firef
 
 ## To do
 
+- [ ] Better demos -- explain the intention of the demo
 - [ ] noscript tags run in old browsers
 - [ ] component (like Veneer)
 - [ ] video player
