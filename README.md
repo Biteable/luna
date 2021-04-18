@@ -1,4 +1,4 @@
-# Koto
+# Luna
 
 A collection of utilities an helpers for doing stuff in the browser with JavaScript.
 
@@ -7,7 +7,7 @@ A collection of utilities an helpers for doing stuff in the browser with JavaScr
 Until this hits version 1.*.* things are going to change so install using a specific commit hash.
 
 ```
-npm install https://github.com/dominicwhittle/koto#e5e3737
+npm install https://github.com/dominicwhittle/luna#commitsha
 ```
 
 Both TypeScript and JavaScript are included, with the JavaScript versions in the `dist` directory.
@@ -26,12 +26,14 @@ You'll need to install:
 Build:
 
 ```
+nvm use
 yarn build
 ```
 
 Watch:
 
 ```
+nvm use
 yarn watch
 ```
 
