@@ -58,6 +58,11 @@ npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firef
 
 - [ ] Better demos -- explain the intention of the demo
 - [ ] noscript tags run in old browsers
+- [ ] transition helpers
+    - [ ] css driven / transition
+    - [ ] FLIP
+    - [ ] Magic motion
+    - [ ] Animate fn (play/pause/seek etc)
 - [ ] component (like Veneer)
 - [ ] video player
 - [ ] server to replace python method
