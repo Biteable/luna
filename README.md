@@ -44,8 +44,7 @@ yarn watch
 To view the demo html files:
 
 ```
-cd demo
-python -m SimpleHTTPServer 8080
+yarn serve-demos
 ```
 
 For specific browser targetting you might want to try:
