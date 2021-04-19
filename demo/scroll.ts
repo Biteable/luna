@@ -3,10 +3,11 @@ import { addScrollListener, intersection, ScrollCallback } from "../wip/scrollLi
 import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
 import { clamp } from "../math/clamp"
-import { scheduleAnimationFrame } from "../util/scheduleAnimationFrame"
+// import { scheduleAnimationFrame } from "../util/scheduleAnimationFrame"
+import { stagger } from "../util/scheduleAnimationFrame"
 
 const paragraphs = queryAll("p")
-console.log(paragraphs)
+// console.log(paragraphs)
 
 const reddish = [255, 72, 0] as RGBA
 const rebeccapurple = [102, 51, 153] as RGBA
@@ -35,17 +36,16 @@ const greenyellow = [173, 255, 47] as RGBA
 //   addScrollListener(el, onScroll)
 // })
 
-paragraphs.forEach(el => {
-  let prev: number
+paragraphs.forEach((el, ix, arr) => {
+  let prevValue: number
   const onScroll: ScrollCallback = (data) => {
     const { root } = data
     const { value } = intersection(data)
 
     // @note Runs also when value is 0
     // @note Avoids writing if the previous value hasn't changed
-
-    if (value === prev) return
-    prev = value
+    if (value === prevValue) return
+    prevValue = value
 
     // @note color transitions based on total page scroll
     const scrollComplete = root.scrollY / (root.scrollHeight - root.height)
@@ -61,12 +61,22 @@ paragraphs.forEach(el => {
     //   el.style.transform = `translateX(${200 * easedValue}px)`
     //   el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
     // })
-    scheduleAnimationFrame(el, (staggerIndex) => {
-      // setTimeout(() => {
-        el.style.transform = `translateX(${200 * easedValue * (staggerIndex * 10)}px)`
+
+    // @note don't do this on every frame like I am in this demo. Stagger isn't very performant and is best saved for use cases where you set a class once and want to stagger the fade in.
+    const staggerNamespace = `p-${data.offset.top}`
+    stagger(staggerNamespace, el, (i, len) => {
+      requestAnimationFrame(() => {
+        el.style.transform = `translateX(${100 * easedValue}px) translateY(${i * 16}px)`
         el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
-      // }, )
+      })
     })
+
+    // scheduleAnimationFrame(el, (staggerIndex) => {
+    //   // setTimeout(() => {
+    //     el.style.transform = `translateX(${200 * easedValue * (staggerIndex * 10)}px)`
+    //     el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
+    //   // }, )
+    // })
   }
   addScrollListener(el, onScroll)
 })

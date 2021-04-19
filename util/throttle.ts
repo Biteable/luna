@@ -1,4 +1,4 @@
-export default function (fn: Function, threshhold?: number, scope?: Object) {
+export const throttle = (fn: Function, threshhold?: number, scope?: Object) => {
   threshhold || (threshhold = 250)
   var last: any
   var deferTimer: any
