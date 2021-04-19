@@ -66,6 +66,7 @@ npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firef
 - [ ] component (like Veneer)
 - [ ] video player
 - [ ] server to replace python method
+- [ ] Drag util
 - [-] ~~Move from yarn to npm~~ It's still not as fast as yarn
 
 
