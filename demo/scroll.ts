@@ -3,7 +3,7 @@ import { addScrollListener, intersection, ScrollCallback } from "../wip/scrollLi
 import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
 import { clamp } from "../math/clamp"
-
+import { scheduleAnimationFrame } from "../util/scheduleAnimationFrame"
 
 const paragraphs = queryAll("p")
 console.log(paragraphs)
@@ -57,9 +57,15 @@ paragraphs.forEach(el => {
 
     // @note interpolate colour based on intersection value
     // @note do as little as possible in the rAF
-    requestAnimationFrame(() => {
-      el.style.transform = `translateX(${200 * easedValue}px)`
-      el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
+    // requestAnimationFrame(() => {
+    //   el.style.transform = `translateX(${200 * easedValue}px)`
+    //   el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
+    // })
+    scheduleAnimationFrame(el, (staggerIndex) => {
+      // setTimeout(() => {
+        el.style.transform = `translateX(${200 * easedValue * (staggerIndex * 10)}px)`
+        el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
+      // }, )
     })
   }
   addScrollListener(el, onScroll)
