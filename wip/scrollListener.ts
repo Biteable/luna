@@ -48,6 +48,9 @@ Or
   add(el, onscroll)
 ```
 */
+// Callbacks that are supposed to happen at exactly the same time are ordered by the position of the element in the DOM and called with a staggerIndex. This allows
+
+
 
 // import { debounce } from "../util/debounce"
 import { offset, OffsetData } from "../dom/offset"

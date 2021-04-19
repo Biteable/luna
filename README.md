@@ -65,6 +65,7 @@ npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firef
     - [ ] Animate fn (play/pause/seek etc)
 - [ ] component (like Veneer)
 - [ ] video player
+- [ ] parseHTML, maybe use insertAdjacent on a dummy element?
 - [ ] server to replace python method
 - [-] ~~Move from yarn to npm~~ It's still not as fast as yarn
 
