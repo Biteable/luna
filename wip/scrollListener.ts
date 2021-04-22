@@ -116,7 +116,9 @@ function onResize () {
 
 
 function onScroll () {
-  // console.log("onScroll")
+  const length = tracked.length
+  if (!length) return
+
   const w = window
   const html = document.documentElement
   const root: RootData = {
@@ -128,12 +130,12 @@ function onScroll () {
     height: html.clientHeight, // @note maybe cache
   }
 
-  const length = tracked.length
   for (var i = 0; i < length; i++) {
     const { target, cb, offset } = tracked[i]
     cb({ target, offset, root })
   }
 
+  // console.log("onScroll", length)
   lastScrollY = w.scrollY
 }
 
