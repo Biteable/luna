@@ -63,12 +63,20 @@ paragraphs.forEach((el, ix, arr) => {
     // })
 
     // @note don't do this on every frame like I am in this demo. Stagger isn't very performant and is best saved for use cases where you set a class once and want to stagger the fade in.
+    // const staggerNamespace = `p-${data.offset.top}`
+    // stagger(staggerNamespace, el, (i, len) => {
+    //   requestAnimationFrame(() => {
+    //     el.style.transform = `translateX(${100 * easedValue}px) translateY(${i * 16}px)`
+    //     el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
+    //   })
+    // })
+
     const staggerNamespace = `p-${data.offset.top}`
     stagger(staggerNamespace, el, (i, len) => {
-      requestAnimationFrame(() => {
-        el.style.transform = `translateX(${100 * easedValue}px) translateY(${i * 16}px)`
+      // requestAnimationFrame(() => {
+        el.style.transform = `translateX(${100 * easedValue}px) translateY(${16 * i}px)`
         el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
-      })
+      // })
     })
 
     // scheduleAnimationFrame(el, (staggerIndex) => {
