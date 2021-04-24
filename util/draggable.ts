@@ -1,61 +1,59 @@
+type OnStartEvent = (e: Event) => any
+type OnMoveEvent = (e: Event, dx: number, dy: number) => any
+type OnEndEvent = (e: Event, dx: number, dy: number) => any
 
 
 export function draggable (el: HTMLElement) {
-  // let isDragging = false
   let startX: number
   let startY: number
+  let dX: number
+  let dY: number
 
-  el.addEventListener("mousedown", onStart)
-  el.addEventListener("touchstart", onStart)
+  el.addEventListener("mousedown", _onStart)
+  el.addEventListener("touchstart", _onStart)
 
-  let start: () => any
-  let move: (dx: number, dy: number) => any
-  let end: (dx: number, dy: number) => any
+  const noop = () => {}
+
+  let onStart: OnStartEvent = noop
+  let onMove: OnMoveEvent = noop
+  let onEnd: OnEndEvent = noop
 
   return {
-    start (cb: () => any) { start = cb },
-    move (cb: (dx: number, dy: number) => any) { move = cb },
-    end (cb: (dx: number, dy: number) => any) { end = cb },
+    onStart (cb: OnStartEvent) { onStart = cb },
+    onMove (cb: OnMoveEvent) { onMove = cb },
+    onEnd (cb: OnEndEvent) { onEnd = cb },
     removeListeners () {
-      el.removeEventListener("mousedown", onStart)
-      el.removeEventListener("touchstart", onStart)
+      el.removeEventListener("mousedown", _onStart)
+      el.removeEventListener("touchstart", _onStart)
     }
   }
 
-  function onStart (e: MouseEvent | TouchEvent) {
+
+  function _onStart (e: MouseEvent | TouchEvent) {
     [startX, startY] = positions(e)
-    start()
-    onMove(e)
+    onStart(e)
     addBodyListeners()
   }
 
-  function onMove (e: MouseEvent | TouchEvent) {
-    e.preventDefault()
+
+  function _onMove (e: MouseEvent | TouchEvent) {
     const [clientX, clientY] = positions(e)
-    const dx = clientX - startX
-    const dy = clientY - startY
-    // I think this is needed on iOS?
-    // Can't remember
-    // if (!isDragging) {
-    //   start(dx, dy)
-    //   isDragging = true
-    // } else {
-    move(dx, dy)
-    // }
-    // console.log("Moving...", dx, dy, e.type)
+    dX = clientX - startX
+    dY = clientY - startY
+    onMove(e, dX, dY)
   }
 
-  function onEnd (e: MouseEvent | TouchEvent) {
-    const [clientX, clientY] = positions(e)
-    const dx = clientX - startX
-    const dy = clientY - startY
-    // console.log("Move ended.")
-    end(dx, dy)
-    // isDragging = false
+
+  function _onEnd (e: MouseEvent | TouchEvent) {
+    // This is called by both mouseup and touchend, the latter of which does not have touch positions in the event so we can't get the last position the user *was* touching from this event.
+    onEnd(e, dX, dY)
     startX = undefined
     startY = undefined
+    dX = undefined
+    dY = undefined
     removeBodyListeners()
   }
+
 
   function positions (e: MouseEvent | TouchEvent) {
     if (e.type.indexOf("mouse") === 0) {
@@ -70,19 +68,22 @@ export function draggable (el: HTMLElement) {
     return [NaN, NaN]
   }
 
+
+  // We bind events to window because window continues to fire events when the cursor is outside the viewport.
+
+
   function addBodyListeners () {
-    window.addEventListener("mousemove", onMove)
-    window.addEventListener("mouseup", onEnd)
-    window.addEventListener("mouseleave", onEnd)
-    window.addEventListener("touchmove", onMove)
-    window.addEventListener("touchend", onEnd)
+    window.addEventListener("mousemove", _onMove)
+    window.addEventListener("mouseup", _onEnd)
+    window.addEventListener("touchmove", _onMove)
+    window.addEventListener("touchend", _onEnd)
   }
 
+
   function removeBodyListeners () {
-    window.removeEventListener("mousemove", onMove)
-    window.removeEventListener("mouseup", onEnd)
-    window.removeEventListener("mouseleave", onEnd)
-    window.removeEventListener("touchmove", onMove)
-    window.removeEventListener("touchend", onEnd)
+    window.removeEventListener("mousemove", _onMove)
+    window.removeEventListener("mouseup", _onEnd)
+    window.removeEventListener("touchmove", _onMove)
+    window.removeEventListener("touchend", _onEnd)
   }
 }
