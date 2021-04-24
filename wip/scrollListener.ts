@@ -9,13 +9,13 @@ Performant scroll based actions in 60 FPS.
 
 
 @todo
-- [ ] Save root data to var to optimise when it's written
-- [ ] DOM mutation observer that also triggers a reMeasure
+- [x] Save root data to var to optimise when it's written
+- [x] DOM mutation observer that also triggers a reMeasure
 - [ ] Document use of rAF: "Only wrap your DOM changes"
 - [ ] Complete use cases
 - [ ] Consider renaming "offset" to "target"
 - [ ] Implement threshold in Intersection method
-- [ ] Example pattern for `addOnce`
+- [ ] Example pattern for `addOnce`?
 
 
 @note use cases to cover
@@ -42,30 +42,28 @@ Callbacks should calculate whether they are going to update the DOM, and only if
 Or
 
 ```
-  const onscroll = (data) => {
+  const onScroll = (data) => {
     if (interstion(data).isIntersecting) {
       requestAnimationFrame(() => { el.classList.add("Hello! You can see me!") })
     }
   }
-  add(el, onscroll)
+  add(el, onScroll)
 ```
 */
-// Callbacks that are supposed to happen at exactly the same time are ordered by the position of the element in the DOM and called with a staggerIndex. This allows
 
 
-
-// import { debounce } from "../util/debounce"
 import { offset as getOffset, OffsetData } from "../dom/offset"
 import { clamp } from "../math/clamp"
+import { debounce } from "../util/debounce"
 
 
 interface RootData {
-  scrollX: number
-  scrollY: number
-  scrollHeight: number
-  direction: Direction
-  width: number
-  height: number
+  scrollX?: number
+  scrollY?: number
+  scrollHeight?: number
+  direction?: Direction
+  width?: number
+  height?: number
 }
 
 interface TrackedData {
@@ -80,20 +78,19 @@ interface ScrollData {
   root: RootData
 }
 
-interface IntersectionData {
-  target: HTMLElement,
-  isIntersecting: boolean
-  ratio: number // 0–1
-  value: number // 0–1
-}
 
 export type ScrollCallback = (data: ScrollData) => any
 type Threshold = number // @todo... remove? Implement in `intersection` method
 
+
+const debug = false
+
+
 let initiated = false
 let tracked: TrackedData[] = []
 let lastScrollY: number
-let root: RootData
+let root: RootData = {}
+let domObserver: MutationObserver
 
 
 type Direction = "DOWN" | "UP"
@@ -101,8 +98,19 @@ export const DOWN = "DOWN"
 export const UP = "UP"
 
 
+export function update () {
+  debug && console.log("::update")
+  measureRootData()
+  measureOffsets()
+  onScroll()
+}
+
+
+const debouncedOnResize = debounce(update, 250)
+
+
 function measureOffsets () {
-  console.log("measureOffsets")
+  debug && console.log("::measureOffsets")
   const length = tracked.length
   for (var i = 0; i < length; i++) {
     const target = tracked[i].target
@@ -111,34 +119,27 @@ function measureOffsets () {
 }
 
 
-function onResize () {
-  measureRootData()
-  measureOffsets()
-  onScroll()
-}
-
-
 function measureRootData () {
-  console.log("measureRootData")
+  debug && console.log("::measureRootData")
   const w = window
   const html = document.documentElement
 
-  root = {
-    scrollX: w.scrollX,
-    scrollY: w.scrollY,
-    scrollHeight: html.scrollHeight, // @note maybe cache
-    direction: w.scrollY >= lastScrollY ? DOWN : UP,
-    width: html.clientWidth, // * clientWidth vs offsetWidth
-    height: html.clientHeight, // @note maybe cache
-  }
+  root.scrollX = w.scrollX
+  root.scrollY = w.scrollY
+  root.scrollHeight = html.scrollHeight // @note maybe cache
+  root.direction = w.scrollY >= lastScrollY ? DOWN : UP
+  root.width = html.clientWidth // * clientWidth vs offsetWidth
+  root.height = html.clientHeight // @note maybe cache
 }
 
 
 function onScroll () {
-  console.log("onScroll")
   const length = tracked.length
   if (!length) return
 
+  debug && console.log("::onScroll")
+
+  // Update scroll position specific root data
   root.scrollX = window.scrollX
   root.scrollY = window.scrollY
   root.direction = window.scrollY >= lastScrollY ? DOWN : UP
@@ -150,8 +151,6 @@ function onScroll () {
     const { target, cb, offset } = tracked[i]
     cb({ target, offset, root })
   }
-
-  lastScrollY = window.scrollY
 }
 
 
@@ -164,11 +163,11 @@ export function addScrollListener (target: HTMLElement, cb: ScrollCallback) {
 
   if (!initiated) {
     initiated = true
+    update()
     addEventListeners()
-    onResize()
-  } else {
-    cb({ target, offset, root }) // Immediately apply callbacks for added target
   }
+
+  cb({ target, offset, root }) // Immediately apply callbacks for added target
 }
 
 
@@ -186,15 +185,6 @@ export function removeScrollListener (target: HTMLElement, cb?: ScrollCallback) 
 }
 
 
-// function init () {
-//   if (initiated) return
-//   initiated = true
-//   onResize()
-//   onScroll()
-//   addEventListeners()
-// }
-
-
 export function removeAll () {
   initiated = false
   tracked = []
@@ -204,19 +194,27 @@ export function removeAll () {
 
 function addEventListeners () {
   window.addEventListener("scroll", onScroll, { passive: true })
-  window.addEventListener("resize", onResize, { passive: true })
+  window.addEventListener("resize", update, { passive: true })
+  domObserver = new MutationObserver(debouncedOnResize)
+  domObserver.observe(document.documentElement, { attributes: false, childList: true, subtree: true })
 }
 
 
 function removeEventListeners () {
   window.removeEventListener("scroll", onScroll)
-  window.removeEventListener("resize", onResize)
+  window.removeEventListener("resize", update)
+  domObserver.disconnect()
 }
 
 
-/*
+interface IntersectionData {
+  target: HTMLElement,
+  isIntersecting: boolean
+  ratio: number // 0–1
+  value: number // 0–1
+}
 
-*/
+
 export function intersection (
   {
     target,
