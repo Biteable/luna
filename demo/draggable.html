@@ -38,24 +38,16 @@
         content: " ";
         display: inline-block;
       }
-      .drag1 {
 
-        /* border-radius: 40px; */
-        background: #e0e0e0;
-        /* box-shadow:  20px 20px 60px #bebebe,
-                    -20px -20px 60px #ffffff;
-        transition: all ease-out 0.15s;
-        opacity: 0;
-        transform: scale(0.7); */
-      }
-      .drag1-handle {
+      .drag-anywhere-handle {
         position: relative;
         width: 42px;
         height: 42px;
         border-radius: 50%;
         background-color: blue;
       }
-      .drag1-handle.is-dragging {
+
+      .is-dragging {
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
 
@@ -64,8 +56,13 @@
   <body>
     <h1>Draggable</h1>
     <p class="note"></p>
-    <div class="drag1">
-      <div class="drag1-handle"></div>
+
+    <h2>Drag anywhere</h2>
+    <div class="drag-anywhere-handle"></div>
+
+    <h2>Drag constrained to area</h2>
+    <div class="drag-constrained">
+      <div class="drag-constrained-handle"></div>
     </div>
     <script src="/draggable.js?M"></script>
   </body>

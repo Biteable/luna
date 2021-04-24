@@ -14,14 +14,14 @@ export function draggable (el: HTMLElement) {
 
   const noop = () => {}
 
-  let onStart: OnStartEvent = noop
-  let onMove: OnMoveEvent = noop
-  let onEnd: OnEndEvent = noop
+  let onstart: OnStartEvent = noop
+  let onmove: OnMoveEvent = noop
+  let onend: OnEndEvent = noop
 
   return {
-    onStart (cb: OnStartEvent) { onStart = cb },
-    onMove (cb: OnMoveEvent) { onMove = cb },
-    onEnd (cb: OnEndEvent) { onEnd = cb },
+    onstart (cb: OnStartEvent) { onstart = cb },
+    onmove (cb: OnMoveEvent) { onmove = cb },
+    onend (cb: OnEndEvent) { onend = cb },
     removeListeners () {
       el.removeEventListener("mousedown", _onStart)
       el.removeEventListener("touchstart", _onStart)
@@ -31,7 +31,7 @@ export function draggable (el: HTMLElement) {
 
   function _onStart (e: MouseEvent | TouchEvent) {
     [startX, startY] = positions(e)
-    onStart(e)
+    onstart(e)
     addBodyListeners()
   }
 
@@ -40,13 +40,13 @@ export function draggable (el: HTMLElement) {
     const [clientX, clientY] = positions(e)
     dX = clientX - startX
     dY = clientY - startY
-    onMove(e, dX, dY)
+    onmove(e, dX, dY)
   }
 
 
   function _onEnd (e: MouseEvent | TouchEvent) {
-    // This is called by both mouseup and touchend, the latter of which does not have touch positions in the event so we can't get the last position the user *was* touching from this event.
-    onEnd(e, dX, dY)
+    // This is called by both mouseup and touchend. However touchend does not have touch positions in the event so we can't get the last position the user *was* touching from this event.
+    onend(e, dX, dY)
     startX = undefined
     startY = undefined
     dX = undefined

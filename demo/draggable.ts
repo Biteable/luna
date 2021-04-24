@@ -1,43 +1,53 @@
 import { query } from "../dom/query"
-// import { addScrollListener, removeScrollListener, intersection, ScrollCallback } from "../wip/scrollListener"
 import { draggable } from "../util/draggable"
 
-console.log("Draggable demo")
 
 const note = query(".note")
-const handle = query(".drag1-handle")
-
 note.innerText = "M"
 
 
-const Handle = draggable(handle)
-let left: number
-let top: number
+{
+  // Drag anywhere example
 
-Handle.onStart((e) => {
-  e.preventDefault() // Prevent the document itself from scrolling up and down. There are times where you might want that behaviour (eg when implementing a horizontal slider) so this code doesn't force an opinion.
-  const styles = window.getComputedStyle(handle)
-  left = parseFloat(styles.left)
-  top = parseFloat(styles.top)
-  requestAnimationFrame(() => {
-    note.innerText = `onStart ${left} ${top}`
-    handle.classList.add("is-dragging")
+  let left: number
+  let top: number
+
+  const handle = query(".drag-anywhere-handle")
+  console.log(handle)
+
+  const Drag = draggable(handle)
+
+  Drag.onstart((e) => {
+    e.preventDefault() // Prevent the document itself from scrolling up and down. There are times where you might want that behaviour (eg when implementing a horizontal slider) so draggable leaves this up to you.
+
+    // At the start of a drag we measure and save the left/top offsets
+    const styles = window.getComputedStyle(handle)
+    left = parseFloat(styles.left)
+    top = parseFloat(styles.top)
+
+    requestAnimationFrame(() => {
+      handle.classList.add("is-dragging")
+    })
   })
-})
-Handle.onMove((e, dx, dy) => {
-  requestAnimationFrame(() => {
-    note.innerText = `onMove ${dx} ${dy}`
-    handle.style.transform = `translateX(${dx}px) translateY(${dy}px)`
+
+  Drag.onmove((e, dx, dy) => {
+    // dx and xy represent the change from the initial start position
+    // During a drag we set these in a transform
+    requestAnimationFrame(() => {
+      handle.style.transform = `translateX(${dx}px) translateY(${dy}px)`
+    })
   })
-})
-Handle.onEnd((e, dx, dy) => {
-  left += dx
-  top += dy
-  requestAnimationFrame(() => {
-    note.innerText = `onEnd ${dx} ${dy} ${left} ${top}`
-    handle.style.left = `${left}px`
-    handle.style.top = `${top}px`
-    handle.style.transform = ""
-    handle.classList.remove("is-dragging")
+
+  Drag.onend((e, dx, dy) => {
+    // At the end of a drag we save the new left/top offsets by adding the dx/dy
+    left += dx
+    top += dy
+    // And finally remove the transforms and reset the left/top to the final position
+    requestAnimationFrame(() => {
+      handle.style.left = `${left}px`
+      handle.style.top = `${top}px`
+      handle.style.transform = ""
+      handle.classList.remove("is-dragging")
+    })
   })
-})
+}
