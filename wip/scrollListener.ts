@@ -9,6 +9,8 @@ Performant scroll based actions in 60 FPS.
 
 
 @todo
+- [ ] Save root data to var to optimise when it's written
+- [ ] DOM mutation observer that also triggers a reMeasure
 - [ ] Document use of rAF: "Only wrap your DOM changes"
 - [ ] Complete use cases
 - [ ] Consider renaming "offset" to "target"
@@ -53,7 +55,7 @@ Or
 
 
 // import { debounce } from "../util/debounce"
-import { offset, OffsetData } from "../dom/offset"
+import { offset as getOffset, OffsetData } from "../dom/offset"
 import { clamp } from "../math/clamp"
 
 
@@ -91,7 +93,7 @@ type Threshold = number // @todo... remove? Implement in `intersection` method
 let initiated = false
 let tracked: TrackedData[] = []
 let lastScrollY: number
-
+let root: RootData
 
 
 type Direction = "DOWN" | "UP"
@@ -100,28 +102,28 @@ export const UP = "UP"
 
 
 function measureOffsets () {
+  console.log("measureOffsets")
   const length = tracked.length
   for (var i = 0; i < length; i++) {
     const target = tracked[i].target
-    tracked[i].offset = offset(target)
+    tracked[i].offset = getOffset(target)
   }
 }
 
 
 function onResize () {
-  // console.log("onResize")
+  measureRootData()
   measureOffsets()
   onScroll()
 }
 
 
-function onScroll () {
-  const length = tracked.length
-  if (!length) return
-
+function measureRootData () {
+  console.log("measureRootData")
   const w = window
   const html = document.documentElement
-  const root: RootData = {
+
+  root = {
     scrollX: w.scrollX,
     scrollY: w.scrollY,
     scrollHeight: html.scrollHeight, // @note maybe cache
@@ -129,6 +131,17 @@ function onScroll () {
     width: html.clientWidth, // * clientWidth vs offsetWidth
     height: html.clientHeight, // @note maybe cache
   }
+}
+
+
+function onScroll () {
+  console.log("onScroll")
+  const length = tracked.length
+  if (!length) return
+
+  root.scrollX = window.scrollX
+  root.scrollY = window.scrollY
+  root.direction = window.scrollY >= lastScrollY ? DOWN : UP
 
   for (var i = 0; i < length; i++) {
     // Check the tracked item still exists. This is necessary because removeScrollListener can be called during this loop (eg in the tracked item callback) which mutates the tracked array and can change the length mid-loop.
@@ -138,7 +151,7 @@ function onScroll () {
     cb({ target, offset, root })
   }
 
-  lastScrollY = w.scrollY
+  lastScrollY = window.scrollY
 }
 
 
@@ -146,17 +159,16 @@ export function addScrollListener (target: HTMLElement, cb: ScrollCallback) {
   // Don't subscribe the same callback + element multiple times
   if (tracked.some((x) => x.target === target && x.cb === cb)) return
 
-  tracked.push({
-    target,
-    cb,
-    offset: offset(target) // @todo measure at a better time?
-  })
+  const offset = getOffset(target) // @todo measure at a better time?
+  tracked.push({ target, cb, offset })
 
-  init()
-  onScroll() // @todo if we measure offsets in this add method, we only need to apply callbacks for the current target
-
-  // @todo Maybe measure and run post subscribe?
-  // @todo Maybe initiate and add listeners here?
+  if (!initiated) {
+    initiated = true
+    addEventListeners()
+    onResize()
+  } else {
+    cb({ target, offset, root }) // Immediately apply callbacks for added target
+  }
 }
 
 
@@ -174,16 +186,16 @@ export function removeScrollListener (target: HTMLElement, cb?: ScrollCallback) 
 }
 
 
-function init () {
-  if (initiated) return
-  initiated = true
-  onResize()
-  onScroll()
-  addEventListeners()
-}
+// function init () {
+//   if (initiated) return
+//   initiated = true
+//   onResize()
+//   onScroll()
+//   addEventListeners()
+// }
 
 
-function uninit () {
+export function removeAll () {
   initiated = false
   tracked = []
   removeEventListeners()
@@ -255,8 +267,3 @@ export function intersection (
     value: clamp(0, value, 1),
   }
 }
-
-
-// Exports
-
-export { uninit }
