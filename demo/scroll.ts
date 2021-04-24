@@ -4,7 +4,7 @@ import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
 import { clamp } from "../math/clamp"
 // import { scheduleAnimationFrame } from "../util/scheduleAnimationFrame"
-import { stagger } from "../util/scheduleAnimationFrame"
+import { stagger } from "../util/stagger"
 
 const paragraphs = queryAll("p")
 // console.log(paragraphs)
