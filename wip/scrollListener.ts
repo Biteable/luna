@@ -131,18 +131,18 @@ function onScroll () {
   }
 
   for (var i = 0; i < length; i++) {
+    // Check the tracked item still exists. This is necessary because removeScrollListener can be called during this loop (eg in the tracked item callback) which mutates the tracked array and can change the length mid-loop.
+    if (!tracked[i]) continue
+
     const { target, cb, offset } = tracked[i]
     cb({ target, offset, root })
   }
 
-  // console.log("onScroll", length)
   lastScrollY = w.scrollY
 }
 
 
 export function addScrollListener (target: HTMLElement, cb: ScrollCallback) {
-  // console.log("add")
-
   // Don't subscribe the same callback + element multiple times
   if (tracked.some((x) => x.target === target && x.cb === cb)) return
 
@@ -168,6 +168,9 @@ export function removeScrollListener (target: HTMLElement, cb?: ScrollCallback) 
   } else {
     tracked = tracked.filter((x) => !(x.target === target))
   }
+
+  // Call onScroll again. This is necessary because removeScrollListener can be called during iteration of the tracked array and can change the length mid-loop.
+  onScroll()
 }
 
 
