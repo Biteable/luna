@@ -1,5 +1,5 @@
 import { queryAll } from "../dom/query"
-import { addScrollListener, removeScrollListener, intersection, ScrollCallback } from "../wip/scrollListener"
+import { addScrollListener, removeScrollListener, intersection, ScrollCallback } from "../util/scrollListener"
 import { stagger } from "../util/stagger"
 
 

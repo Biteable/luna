@@ -1,60 +1,6 @@
-/*
-@polyfill Array.includes required for all versions of Internet Explorer
-
-
-scrollListener
-==============
-
-Performant scroll based actions in 60 FPS.
-
-
-@todo
-- [x] Save root data to var to optimise when it's written
-- [x] DOM mutation observer that also triggers a reMeasure
-- [ ] Document use of rAF: "Only wrap your DOM changes"
-- [ ] Complete use cases
-- [ ] Consider renaming "offset" to "target"
-- [ ] Implement threshold in Intersection method
-- [ ] Example pattern for `addOnce`?
-
-
-@note use cases to cover
-- [ ] Asset lazy loading
-- [x] Nav positioned/transformed based on scroll offset
-- [ ] component/veneer integration
-- [ ] IO behaviour
-- [ ] Works with elements with fixed positions; ie, their offset relative to the document _does_ change as the page scrolls
-- [ ] parallax and animation tweening
-- [ ] TOC heading highlighting behaviour
-
-
-When to use requestAnimationFrame
----------------------------------
-
-Callbacks should calculate whether they are going to update the DOM, and only if they will do so should they wrap the DOM change in rAF, eg:
-
-```
-  if (offset.top > someValue) {
-    requestAnimationFrame(writeLayout)
-  }
-```
-
-Or
-
-```
-  const onScroll = (data) => {
-    if (interstion(data).isIntersecting) {
-      requestAnimationFrame(() => { el.classList.add("Hello! You can see me!") })
-    }
-  }
-  add(el, onScroll)
-```
-*/
-
-
 import { offset as getOffset, OffsetData } from "../dom/offset"
-import { clamp } from "../util/clamp"
-import { debounce } from "../util/debounce"
+import { clamp } from "./clamp"
+import { debounce } from "./debounce"
 
 
 interface RootData {

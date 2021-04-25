@@ -121,3 +121,35 @@ Polyfills
 @todo complete this. Add to each function.
 
 `Object.assign` -> style required for all versions of Internet Explorer
+
+
+scrollListener
+==============
+
+Performant scroll based actions in 60 FPS.
+
+
+@todo
+- [x] Save root data to var to optimise when it's written
+- [x] DOM mutation observer that also triggers a reMeasure
+- [ ] Document use of rAF: "Only wrap your DOM changes"
+- [ ] Complete use cases
+- [ ] Consider renaming "offset" to "target"
+- [ ] Implement threshold in Intersection method
+- [ ] Example pattern for `addOnce`?
+
+
+@note use cases to cover
+- [ ] Asset lazy loading
+- [x] Nav positioned/transformed based on scroll offset
+- [ ] component/veneer integration
+- [ ] IO behaviour
+- [ ] Works with elements with fixed positions; ie, their offset relative to the document _does_ change as the page scrolls
+- [ ] parallax and animation tweening
+- [ ] TOC heading highlighting behaviour
+
+
+When to use requestAnimationFrame
+---------------------------------
+
+Callbacks should calculate whether they are going to update the DOM, and only if they will do so should they wrap the DOM change in rAF, eg:
