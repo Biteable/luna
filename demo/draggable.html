@@ -47,10 +47,37 @@
         background-color: blue;
       }
 
-      .is-dragging {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      .drag-constrained {
+        margin: 0 2em;
+        width: 10em;
+        max-width: 100%;
+        aspect-ratio: 1 / 1;
+        background: #fff;
+        position: relative;
+        border-radius: 8px;
+        user-select: none; /* Prevent drags from selecting text */
+      }
+      .drag-constrained-handle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+      }
+      .drag-constrained-handle::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: blue;
       }
 
+      .is-dragging {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        cursor: grabbing;
+      }
     </style>
   </head>
   <body>
@@ -64,6 +91,7 @@
     <div class="drag-constrained">
       <div class="drag-constrained-handle"></div>
     </div>
+
     <script src="/draggable.js?M"></script>
   </body>
 </html>

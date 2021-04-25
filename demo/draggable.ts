@@ -1,6 +1,6 @@
 import { query } from "../dom/query"
 import { draggable } from "../util/draggable"
-
+import { clamp } from "../math/clamp"
 
 const note = query(".note")
 note.innerText = "M"
@@ -46,6 +46,68 @@ note.innerText = "M"
     requestAnimationFrame(() => {
       handle.style.left = `${left}px`
       handle.style.top = `${top}px`
+      handle.style.transform = ""
+      handle.classList.remove("is-dragging")
+    })
+  })
+}
+
+
+{
+  // Drag constrained to area
+
+  // In this example we track the left and top positions of the handle as percentages (0-1) relative to its container. This keeps the math simple and lets us clamp the values between 0 and 1.
+
+  const handle = query(".drag-constrained-handle")
+  const container = query(".drag-constrained")
+  const Drag = draggable(handle)
+
+  let handleInitialLeft: number
+  let handleInitialTop: number
+  let containerWidth: number
+  let containerHeight: number
+  let handleLeftPercent: number
+  let handleTopPercent: number
+
+  Drag.onstart(() => {
+    const containerRect = container.getBoundingClientRect()
+
+    // Record initial ppsitions and dimensions
+    handleInitialLeft = handle.offsetLeft
+    handleInitialTop = handle.offsetTop
+    containerWidth = containerRect.width
+    containerHeight = containerRect.height
+
+    requestAnimationFrame(() => {
+      handle.classList.add("is-dragging")
+    })
+  })
+
+  Drag.onmove((e, dx, dy) => {
+    // Calculate the position of the handle as a percentage from 0 to 1
+    const left = (handleInitialLeft + dx) / containerWidth
+    const top = (handleInitialTop + dy) / containerHeight
+
+    // Clamp to no less that 0 and no greater than 1 and save to variables
+    handleLeftPercent = clamp(0, left, 1)
+    handleTopPercent = clamp(0, top, 1)
+
+    // Run DOM writes in rAF
+    requestAnimationFrame(() => {
+      handle.style.left = "0"
+      handle.style.top = "0"
+      handle.style.transform = `
+        translateX(${handleLeftPercent * containerWidth}px)
+        translateY(${handleTopPercent * containerHeight}px)
+      `
+    })
+  })
+
+  Drag.onend(() => {
+    // Remove transforms and use left/top to set final position
+    requestAnimationFrame(() => {
+      handle.style.left = handleLeftPercent * 100 + "%"
+      handle.style.top = handleTopPercent * 100 + "%"
       handle.style.transform = ""
       handle.classList.remove("is-dragging")
     })
