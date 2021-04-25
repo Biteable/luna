@@ -1,4 +1,4 @@
-// import { clamp } from "../math/clamp"
+// import { clamp } from "../util/clamp"
 
 
 // Converts a #ffffff hex string into an [r,g,b] array

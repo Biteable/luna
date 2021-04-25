@@ -1,6 +1,6 @@
 import { query } from "../dom/query"
 import { draggable } from "../util/draggable"
-import { clamp } from "../math/clamp"
+import { clamp } from "../util/clamp"
 
 const note = query(".note")
 note.innerText = "M"

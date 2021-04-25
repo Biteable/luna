@@ -53,7 +53,7 @@ Or
 
 
 import { offset as getOffset, OffsetData } from "../dom/offset"
-import { clamp } from "../math/clamp"
+import { clamp } from "../util/clamp"
 import { debounce } from "../util/debounce"
 
 
