@@ -7,5 +7,5 @@
     "target": "ES6",
     "outDir": "./dist/"
   },
-  "include": ["dom/**/*", "math/**/*", "util/**/*", "wip/**/*"]
+  "include": ["dom/**/*", "math/**/*", "util/**/*", "wip/**/*", "veneer/**/*"]
 }
