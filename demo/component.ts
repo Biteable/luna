@@ -6,15 +6,16 @@ import { stagger } from "../util/stagger"
 
 
 const Apple = component(".Apple", (el) => {
+  console.log("Init 🍏")
   const button = find(el, "button")
   button.addEventListener("click", () => {
-    console.log("Apple")
+    console.log("🍏")
   })
 })
 
 
 const Banana = component(".Banana", (el) => {
-  console.log("init", el)
+  console.log("Init 🍌", el)
 
   requestAnimationFrame(() => {
     el.style.opacity = "0"
