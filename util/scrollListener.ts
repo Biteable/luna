@@ -29,9 +29,6 @@ export type ScrollCallback = (data: ScrollData) => any
 type Threshold = number // @todo... remove? Implement in `intersection` method
 
 
-const debug = false
-
-
 let initiated = false
 let tracked: TrackedData[] = []
 let lastScrollY: number
@@ -45,7 +42,7 @@ export const UP = "UP"
 
 
 export function update () {
-  debug && console.log("::update")
+  // console.log("::update")
   measureRootData()
   measureOffsets()
   onScroll()
@@ -56,7 +53,7 @@ const debouncedOnResize = debounce(update, 250)
 
 
 function measureOffsets () {
-  debug && console.log("::measureOffsets")
+  // console.log("::measureOffsets")
   const length = tracked.length
   for (var i = 0; i < length; i++) {
     const target = tracked[i].target
@@ -66,7 +63,7 @@ function measureOffsets () {
 
 
 function measureRootData () {
-  debug && console.log("::measureRootData")
+  // console.log("::measureRootData")
   const w = window
   const html = document.documentElement
 
@@ -83,7 +80,7 @@ function onScroll () {
   const length = tracked.length
   if (!length) return
 
-  debug && console.log("::onScroll")
+  // console.log("::onScroll")
 
   // Update scroll position specific root data
   root.scrollX = window.scrollX

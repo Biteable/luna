@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Component</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        word-wrap: break-word;
+        font-size: 62.5%;
+        /* 10 / 16 * 100 = 62.5%. This maps 1rem to 10px for easier translation of designs specced in pixels. Being a percentage, it doesn’t overwrite a user’s default font size preference. */
+      }
+      body {
+        margin: 0;
+        padding: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+          segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+          sans-serif;
+        /* font-family: "Inter", sans-serif; */
+        line-height: 1.6;
+        font-size: 2.1rem;
+        background: #e0e0e0;
+        min-height: 300vh; /* Mobile scroll while dragging? */
+      }
+
+      .Apple,
+      .Banana {
+        display: inline-block;
+        border-radius: 16px;
+        padding: 2rem;
+        background-color: #fff;
+        margin: 2rem;
+      }
+      .Apple {
+        background-color: rgb(107, 255, 206);
+      }
+      .Banana {
+        background-color: rgb(255, 240, 107);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Components</h1>
+
+    <div class="Apple">
+      <h2>Apple</h2>
+      <button type="button">Click me</button>
+    </div>
+    <div class="Apple">
+      <h2>Apple</h2>
+      <button type="button">Click me</button>
+    </div>
+    <div class="Apple">
+      <h2>Apple</h2>
+      <button type="button">Click me</button>
+    </div>
+    <div class="Apple">
+      <h2>Apple</h2>
+      <button type="button">Click me</button>
+    </div>
+
+    <div class="Banana">
+      <h2>Banana</h2>
+      <button type="button">Click me</button>
+    </div>
+
+    <div class="Banana">
+      <h2>Banana</h2>
+      <button type="button">Click me</button>
+    </div>
+
+    <div class="Banana">
+      <h2>Banana</h2>
+      <button type="button">Click me</button>
+    </div>
+
+    <script src="/component.js"></script>
+  </body>
+</html>
