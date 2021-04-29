@@ -25,9 +25,11 @@ export function stagger (namespace: string, el: HTMLElement, cb: Callback) {
   if (!groups[namespace]) groups[namespace] = []
   groups[namespace].push({ el, cb })
 
-  // Call processGroups in the next animation frame
-  // This is the mechanism for knowing that different callbacks should run at the same time
-  requestAnimationFrame(processGroups)
+  // This is the mechanism for determining different callbacks that should run at the same time. Previously we used requestAnimationFrame but this is preferred.
+
+  // > Using 0 as the value for setTimeout() schedules the execution of the specified callback function as soon as possible but only after the main code thread has been run.
+  // ref: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Timeouts_and_intervals#immediate_timeouts
+  setTimeout(processGroups, 0)
 }
 
 
