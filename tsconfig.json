@@ -4,7 +4,7 @@
     "noImplicitAny": false,
     "removeComments": false,
     "sourceMap": true,
-    "target": "ES6",
+    "target": "es2016",
     "outDir": "./dist/"
   },
   "include": ["dom/**/*", "math/**/*", "util/**/*", "wip/**/*", "veneer/**/*"]
