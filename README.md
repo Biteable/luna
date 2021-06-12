@@ -1,18 +1,22 @@
-# Luna
+# Luna 🌘
 
 A collection of utilities an helpers for doing stuff in the browser with JavaScript.
 
 ## Usage
 
-Until this hits version 1.*.* things are going to change so install using a specific commit hash.
+Install using a specific commit hash; eg
 
 ```
 npm install https://github.com/dominicwhittle/luna#commitsha
 ```
 
-Both TypeScript and JavaScript are included, with the JavaScript versions in the `dist` directory.
+Both TypeScript and JavaScript are included, with the JavaScript versions in the `js` directory.
 
-You will likely want to use a bundler like browserify, es-build, webpack etc.
+In your scripts:
+
+`import { addClass } from "luna/dom/class"` or `import { addClass } from "luna/js/dom/class" for the TypeScript and Javascript versions respectively.
+
+You will likely want to use a bundler like browserify, es-build, webpack etc to build your code for use in the browser.
 
 
 ## Development
