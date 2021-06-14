@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Component</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        word-wrap: break-word;
+        font-size: 62.5%;
+        /* 10 / 16 * 100 = 62.5%. This maps 1rem to 10px for easier translation of designs specced in pixels. Being a percentage, it doesn’t overwrite a user’s default font size preference. */
+      }
+      body {
+        margin: 0;
+        padding: 2rem 2rem 2rem 320px;
+        font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+          segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+          sans-serif;
+        /* font-family: "Inter", sans-serif; */
+        line-height: 1.6;
+        font-size: 2.1rem;
+        background: #e0e0e0;
+        min-height: 100vh;
+      }
+
+      nav {
+        background-color: #fff;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        padding: 2rem;
+        transform: translateX(-90%);
+        width: 300px;
+      }
+
+      nav.is-transitioning {
+        transition: all 0.6s ease-in-out;
+      }
+
+      nav.is-visible {
+        transform: translateX(0%);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Transition</h1>
+    <nav>...</nav>
+    <button type=button data-action=hide>Hide (H)</button>
+    <button type=button data-action=show>Show (S/J)</button>
+
+    <script src="/transition.js"></script>
+  </body>
+</html>

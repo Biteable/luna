@@ -6,12 +6,13 @@
   "license": "MIT",
   "scripts": {
     "build": "npx tsc",
-    "watch": "npx tsc -w & yarn demo-scroll & yarn demo-index & yarn demo-scroll-stagger & yarn demo-draggable & yarn demo-component",
+    "watch": "npx tsc -w & yarn demo-scroll & yarn demo-index & yarn demo-scroll-stagger & yarn demo-draggable & yarn demo-component & yarn demo-transition",
     "demo-scroll": "esbuild demo/scroll.ts --bundle --watch --outfile=demo/scroll.js",
     "demo-index": "esbuild demo/index.ts --bundle --watch --outfile=demo/index.js",
     "demo-draggable": "esbuild demo/draggable.ts --bundle --watch --outfile=demo/draggable.js",
     "demo-scroll-stagger": "esbuild demo/scroll-stagger.ts --bundle --watch --outfile=demo/scroll-stagger.js",
     "demo-component": "esbuild demo/component.ts --bundle --watch --outfile=demo/component.js",
+    "demo-transition": "esbuild demo/transition.ts --bundle --watch --outfile=demo/transition.js",
     "serve-demos": "http-server ./demo --port 8080"
   },
   "dependencies": {
