@@ -1,3 +1,4 @@
+// @note not like Element.animate() but more of a frame based utility
 export const animate = ({ stuff: any }) => {
     let requestID;
     // requestID = requestAnimationFrame(step);

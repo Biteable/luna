@@ -11,13 +11,13 @@
   https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
 */
 
-export const addClass = (el: HTMLElement, className: string) => {
-  el.classList.add(className)
+export const addClass = (el: HTMLElement, ...classNames: string[]) => {
+  el.classList.add(...classNames)
   return el
 }
 
-export const removeClass = (el: HTMLElement, className: string) => {
-  el.classList.remove(className)
+export const removeClass = (el: HTMLElement, ...classNames: string[]) => {
+  el.classList.remove(...classNames)
   return el
 }
 
@@ -47,12 +47,12 @@ export const containsClass = (el: HTMLElement, className: string) => {
 // Awesome in pipe
 // const addActiveClass = addsClass("active")
 
-export const addsClass = (className: string) => {
-  return (el: HTMLElement) => addClass(el, className)
+export const addsClass = (...classNames: string[]) => {
+  return (el: HTMLElement) => addClass(el, ...classNames)
 }
 
-export const removesClass = (className: string) => {
-  return (el: HTMLElement) => removeClass(el, className)
+export const removesClass = (...classNames: string[]) => {
+  return (el: HTMLElement) => removeClass(el, ...classNames)
 }
 
 export const togglesClass = (className: string, force?: boolean) => {
