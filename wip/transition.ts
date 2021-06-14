@@ -1,3 +1,23 @@
+/*
+
+Why this when we have Element.animate in all browsers?
+------------------------------------------------------
+
+There's a crucial difference between transitions and animations.
+The latter run until completion, and the former don't. If you want to undo/change/reverse an animation while it's still running, then you want a transition. For instance, clicking on a navigation hamburger icon should I really really have to wait for the animation to finish or should I be able to quickly tap again and have the nav (from its half-open state) return close.
+
+- [ ] I think. @todo
+- [ ] Can we call Element.animate before an element has finished animating and get smooth sequencing from the current animation state forwards into the next animation?
+
+
+Further reading on Element.animate
+
+YouTube: Web animation gotchas - HTTP 203
+https://www.youtube.com/watch?v=9-6CKCz58A8&ab_channel=GoogleChromeDevelopers
+https://gist.github.com/jakearchibald/0b50c4918eaf9a67bfcfa55e7e61cd56
+
+*/
+
 interface Args {
   setup?: () => void,
   trigger?: () => void,
