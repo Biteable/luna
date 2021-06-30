@@ -31,8 +31,7 @@ export function draggable (el: HTMLElement) {
 
   function _onStart (e: MouseEvent | TouchEvent) {
     [startX, startY] = positions(e)
-    onstart(e)
-    addBodyListeners()
+    if (onstart(e) !== false) addGlobalListeners() // return false to abort drag
   }
 
 
@@ -51,7 +50,7 @@ export function draggable (el: HTMLElement) {
     startY = undefined
     dX = undefined
     dY = undefined
-    removeBodyListeners()
+    removeGlobalListeners()
   }
 
 
@@ -72,7 +71,7 @@ export function draggable (el: HTMLElement) {
   // We bind events to window because window continues to fire events when the cursor is outside the viewport.
 
 
-  function addBodyListeners () {
+  function addGlobalListeners () {
     window.addEventListener("mousemove", _onMove)
     window.addEventListener("mouseup", _onEnd)
     window.addEventListener("touchmove", _onMove)
@@ -80,10 +79,23 @@ export function draggable (el: HTMLElement) {
   }
 
 
-  function removeBodyListeners () {
+  function removeGlobalListeners () {
     window.removeEventListener("mousemove", _onMove)
     window.removeEventListener("mouseup", _onEnd)
     window.removeEventListener("touchmove", _onMove)
     window.removeEventListener("touchend", _onEnd)
   }
 }
+
+
+// function isLeftClick(e: Event) {
+//   if (e.type.indexOf("mouse") === 0) {
+//     return (e as MouseEvent).button === 0
+//   }
+// }
+
+// function isCtrlKeyPressed(e: Event) {
+//   if (e.type.indexOf("mouse") === 0) {
+//     return (e as MouseEvent).ctrlKey
+//   }
+// }
