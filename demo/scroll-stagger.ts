@@ -1,14 +1,22 @@
-import { queryAll } from "../dom/query"
-import { addScrollListener, removeScrollListener, intersection, ScrollCallback } from "../util/scrollListener"
+import { query, queryAll } from "../dom/query"
+import { addScrollListener, removeScrollListener, intersectionRatio, ScrollCallback, isIntersecting } from "../util/scrollListener"
 import { stagger } from "../util/stagger"
 
 
-queryAll(".card").forEach((el) => {
+const r = query(".root")
+addScrollListener(r, ({ root }) => {
+  r.style.height = root.height + "px"
+  r.style.top = root.scrollY + "px"
+})
+
+queryAll(".card").forEach((el, ix) => {
+  if (ix == 10) el.style.outline = "10px solid pink"
+
   // let done = false
   const onscroll: ScrollCallback = (data) => {
-    if (intersection(data).ratio > 0.2) {
+    if (intersectionRatio(data) > 0.2) {
       // Remove immediately so we do this only once on a matching intersection
-      removeScrollListener(el, onscroll)
+      // removeScrollListener(el, onscroll)
       // if (done) return
       // done = true
 

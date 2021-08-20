@@ -90,37 +90,39 @@ function removeEventListeners() {
     window.removeEventListener("resize", update);
     domObserver.disconnect();
 }
-// Change threshhold to rootMargin
-export function intersection({ entry, root }, threshold = 0) {
-    // Ratio ... 1 is possible even for very tall els, unlike Intersection Observer
-    const scrollY = root.scrollY;
-    const rootTop = root.scrollY + threshold; // But never smaller than root.height / 2
-    const rootHeight = root.height;
-    const rootBottom = root.scrollY + root.height - threshold; // But never smaller than root.height / 2
-    const targetTop = entry.top;
-    const targetHeight = entry.height;
-    const targetBottom = entry.top + entry.height;
-    // Some part of the target is in the viewport when the targetTop edge is < rootBottom and the targetBottom edge > rootTop
-    const isIntersecting = targetTop < rootBottom && targetBottom > rootTop;
-    // Same as IO.entry.isIntersecting
-    // If the target is taller than the root you will never get a ratio of 1
-    const ratio = isIntersecting
-        ? (Math.min(rootBottom - targetTop, targetBottom - rootTop, targetHeight, rootHeight)) / targetHeight
-        : 0;
-    // Like ratio but normalised*
-    // Smooths out the intersection ratio so you always get a linear 0 to 1 to 0 with a guaranteed 1 in the middle and no dead spots where it sits at 1 for a long period of time
-    const valueRangeHeight = targetHeight + rootHeight;
-    const valueRangeTopY = scrollY - targetHeight;
-    const valueRangeMiddleY = valueRangeTopY + valueRangeHeight / 2;
-    // This never seems to completely get to 1, it's 0.0025 off in observations
-    const value = targetTop > valueRangeMiddleY
-        ? 1 - (targetTop - valueRangeMiddleY) / (valueRangeHeight / 2)
-        : (targetTop - valueRangeTopY) / (valueRangeHeight / 2);
-    return {
-        // target: entry.el,
-        isIntersecting,
-        ratio: clamp(0, ratio, 1),
-        value: clamp(0, value, 1),
-    };
-}
+// Right now rootMargin sets both vertical directions (top and bottom) evenly. Later we might want to add top and bottom values separately.
+// Just like with IntersectionObserver, rootMargin is a negative value if you want the root ... @todo check this.
+export const isIntersecting = (data, rootMargin = 0) => {
+    const { entry, root } = data;
+    const rootTop = root.scrollY + rootMargin;
+    const rootBottom = root.scrollY + root.height - rootMargin;
+    return entry.top < rootBottom && entry.top + entry.height > rootTop;
+};
+// Just like with IO.entry.isIntersecting, if the target element is taller than the root you will never get a ratio of 1.
+export const intersectionRatio = (data, rootMargin = 0) => {
+    if (!isIntersecting(data, rootMargin))
+        return 0;
+    const { entry, root } = data;
+    if (entry.height === 0)
+        return 0;
+    const rootTop = root.scrollY + rootMargin;
+    const rootBottom = root.scrollY + root.height - rootMargin;
+    const overlap = Math.min(rootBottom - entry.top, entry.top + entry.height - rootTop, entry.height, root.height);
+    return clamp(0, overlap / entry.height, 1);
+};
+// Like intersectionRatio but normalised so that you always get a linear 0 to 1 value; eg 0 when target element is about to enter the viewport to 1 when the vertical center of the target aligns with the vertical center of the root.
+export const intersectionValue = (data, rootMargin = 0) => {
+    if (!isIntersecting(data, rootMargin))
+        return 0;
+    const { entry, root } = data;
+    const rootTop = root.scrollY + (entry.height / 2) + rootMargin;
+    const rootBottom = root.scrollY + (entry.height / 2) + root.height - rootMargin;
+    const rootHeight = rootBottom - rootTop;
+    const rootMiddle = rootBottom - (rootHeight / 2);
+    const entryMiddle = entry.top + (entry.height / 2);
+    const value = entryMiddle >= rootMiddle
+        ? (entryMiddle - rootMiddle) / rootMiddle
+        : (rootMiddle - entryMiddle) / rootMiddle;
+    return clamp(0, value, 1);
+};
 //# sourceMappingURL=scrollListener.js.map
