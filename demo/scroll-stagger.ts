@@ -13,7 +13,7 @@ queryAll(".card").forEach((el) => {
       // done = true
 
       // Create a namespace that so that only elements with this same namespace that also have a stagger callback scheduled for the same paint frame get treated as stagger siblings
-      const namespace = "card" + data.offset.top
+      const namespace = "card" + data.entry.top
 
       // Call stagger. In this case we are delaying the adding of a classname so that elements animate in a sequence
       stagger(namespace, el, (ix) => {

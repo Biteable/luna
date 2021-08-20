@@ -1,13 +1,13 @@
 import { offset as getOffset } from "../dom/offset";
 import { clamp } from "./clamp";
 import { debounce } from "./debounce";
+export const DOWN = "DOWN";
+export const UP = "UP";
 let initiated = false;
-let tracked = [];
+let entries = [];
 let lastScrollY;
 let root = {};
 let domObserver;
-export const DOWN = "DOWN";
-export const UP = "UP";
 export function update() {
     // console.log("::update")
     measureRootData();
@@ -16,11 +16,8 @@ export function update() {
 }
 const debouncedOnResize = debounce(update, 250);
 function measureOffsets() {
-    // console.log("::measureOffsets")
-    const length = tracked.length;
-    for (var i = 0; i < length; i++) {
-        const target = tracked[i].target;
-        tracked[i].offset = getOffset(target);
+    for (let i = 0; i < entries.length; i++) {
+        Object.assign(entries[i].entry, getOffset(entries[i].entry.target));
     }
 }
 function measureRootData() {
@@ -35,50 +32,51 @@ function measureRootData() {
     root.height = html.clientHeight; // @note maybe cache
 }
 function onScroll() {
-    const length = tracked.length;
+    const length = entries.length;
     if (!length)
         return;
     // console.log("::onScroll")
-    // Update scroll position specific root data
+    // Update root data
     root.scrollX = window.scrollX;
     root.scrollY = window.scrollY;
     root.direction = window.scrollY >= lastScrollY ? DOWN : UP;
-    for (var i = 0; i < length; i++) {
+    // Iterate in reverse order so that elements that are removed don't mess the indexes of other entries
+    for (let i = length - 1; i >= 0; i--) {
         // Check the tracked item still exists. This is necessary because removeScrollListener can be called during this loop (eg in the tracked item callback) which mutates the tracked array and can change the length mid-loop.
-        if (!tracked[i])
+        const obj = entries[i];
+        if (!obj)
             continue;
-        const { target, cb, offset } = tracked[i];
-        cb({ target, offset, root });
+        const { entry, cb } = obj;
+        cb({ entry, root });
     }
 }
 export function addScrollListener(target, cb) {
     // Don't subscribe the same callback + element multiple times
-    if (tracked.some((x) => x.target === target && x.cb === cb))
+    // @todo throw error
+    if (entries.some((obj) => obj.entry.target === target && obj.cb === cb))
         return;
-    const offset = getOffset(target); // @todo measure at a better time?
-    tracked.push({ target, cb, offset });
+    // @todo measure at a better time?
+    const entry = Object.assign({ target }, getOffset(target));
+    entries.push({ entry, cb });
     if (!initiated) {
         initiated = true;
         update();
         addEventListeners();
     }
-    cb({ target, offset, root }); // Immediately apply callbacks for added target
+    cb({ entry, root }); // Immediately apply callbacks for added target
 }
-// if cb, ubsub just that cb, otherwise ubsubs all from el
-// Remove items from array, removing references to function and elements allowing garbage collection
+// If a callback is passed, ubsubcribe just that callback, otherwise ubsubscribe the target element completely
 export function removeScrollListener(target, cb) {
     if (cb) {
-        tracked = tracked.filter((x) => !(x.target === target && x.cb === cb));
+        entries = entries.filter((obj) => !(obj.entry.target === target && obj.cb === cb));
     }
     else {
-        tracked = tracked.filter((x) => !(x.target === target));
+        entries = entries.filter((obj) => !(obj.entry.target === target));
     }
-    // Call onScroll again. This is necessary because removeScrollListener can be called during iteration of the tracked array and can change the length mid-loop.
-    onScroll();
 }
 export function removeAll() {
     initiated = false;
-    tracked = [];
+    entries = [];
     removeEventListeners();
 }
 function addEventListeners() {
@@ -92,15 +90,16 @@ function removeEventListeners() {
     window.removeEventListener("resize", update);
     domObserver.disconnect();
 }
-export function intersection({ target, offset, root }, threshold = 0) {
+// Change threshhold to rootMargin
+export function intersection({ entry, root }, threshold = 0) {
     // Ratio ... 1 is possible even for very tall els, unlike Intersection Observer
     const scrollY = root.scrollY;
     const rootTop = root.scrollY + threshold; // But never smaller than root.height / 2
     const rootHeight = root.height;
     const rootBottom = root.scrollY + root.height - threshold; // But never smaller than root.height / 2
-    const targetTop = offset.top;
-    const targetHeight = offset.height;
-    const targetBottom = offset.top + offset.height;
+    const targetTop = entry.top;
+    const targetHeight = entry.height;
+    const targetBottom = entry.top + entry.height;
     // Some part of the target is in the viewport when the targetTop edge is < rootBottom and the targetBottom edge > rootTop
     const isIntersecting = targetTop < rootBottom && targetBottom > rootTop;
     // Same as IO.entry.isIntersecting
@@ -118,7 +117,7 @@ export function intersection({ target, offset, root }, threshold = 0) {
         ? 1 - (targetTop - valueRangeMiddleY) / (valueRangeHeight / 2)
         : (targetTop - valueRangeTopY) / (valueRangeHeight / 2);
     return {
-        target,
+        // target: entry.el,
         isIntersecting,
         ratio: clamp(0, ratio, 1),
         value: clamp(0, value, 1),

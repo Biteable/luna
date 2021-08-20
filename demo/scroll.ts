@@ -47,13 +47,13 @@ paragraphs.forEach((el, ix, arr) => {
     //   })
     // })
 
-    const staggerNamespace = `p-${data.offset.top}`
-    stagger(staggerNamespace, el, (i, len) => {
-      // requestAnimationFrame(() => {
-        el.style.transform = `translateX(${100 * easedValue}px) translateY(${16 * i}px)`
+    // const staggerNamespace = `p-${data.entry.top}`
+    // stagger(staggerNamespace, el, (i, len) => {
+      requestAnimationFrame(() => {
+        el.style.transform = `translateX(${100 * easedValue}px)`
         el.style.color = `rgba(${interpolateRGB(color1, color2, easedValue).join(",")})`
-      // })
-    })
+      })
+    // })
 
     // scheduleAnimationFrame(el, (staggerIndex) => {
     //   // setTimeout(() => {
@@ -74,8 +74,8 @@ let lastScrollY: number = window.scrollY
 let lastY: number = 0
 let y: number = 0
 
-addScrollListener(nav, ({ offset, root }) => {
-  y = clamp(0, y + root.scrollY - lastScrollY, offset.height)
+addScrollListener(nav, ({ entry, root }) => {
+  y = clamp(0, y + root.scrollY - lastScrollY, entry.height)
 
   if (lastY !== y) {
     requestAnimationFrame(() => {
