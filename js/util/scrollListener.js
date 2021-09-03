@@ -120,6 +120,7 @@ export const intersectionValue = (data, rootMargin = 0) => {
     const rootHeight = rootBottom - rootTop;
     const rootMiddle = rootBottom - (rootHeight / 2);
     const entryMiddle = entry.top + (entry.height / 2);
+    // ??? Test this
     const value = entryMiddle >= rootMiddle
         ? (entryMiddle - rootMiddle) / rootMiddle
         : (rootMiddle - entryMiddle) / rootMiddle;

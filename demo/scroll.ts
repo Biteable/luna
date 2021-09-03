@@ -1,5 +1,5 @@
 import { query, queryAll } from "../dom/query"
-import { addScrollListener, intersection, ScrollCallback } from "../util/scrollListener"
+import { addScrollListener, intersectionValue, ScrollCallback } from "../util/scrollListener"
 import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
 import { clamp } from "../util/clamp"
@@ -16,7 +16,7 @@ paragraphs.forEach((el, ix, arr) => {
   let prevValue: number
   const onScroll: ScrollCallback = (data) => {
     const { root } = data
-    const { value } = intersection(data)
+    const value = intersectionValue(data)
 
     // @note Runs also when value is 0
     // @note Avoids writing if the previous value hasn't changed
