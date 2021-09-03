@@ -1,6 +1,6 @@
 import { find } from "../dom/query"
 import { component } from "../veneer/component"
-import { addScrollListener, removeScrollListener, intersection } from "../util/scrollListener"
+import { addScrollListener, removeScrollListener, intersectionRatio } from "../util/scrollListener"
 import { style } from "../dom/style"
 import { stagger } from "../util/stagger"
 
@@ -24,7 +24,7 @@ const Banana = component(".Banana", (el) => {
   let visible: boolean
 
   addScrollListener(el, (data) => {
-    if (intersection(data).ratio > 0.5) {
+    if (intersectionRatio(data) > 0.5) {
 
       // This prevents this running twice. Which is indicative of removeScrollListener not acting fast enough
       if (visible) return

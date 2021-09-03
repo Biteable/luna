@@ -115,15 +115,16 @@ export const intersectionValue = (data, rootMargin = 0) => {
     if (!isIntersecting(data, rootMargin))
         return 0;
     const { entry, root } = data;
-    const rootTop = root.scrollY + (entry.height / 2) + rootMargin;
-    const rootBottom = root.scrollY + (entry.height / 2) + root.height - rootMargin;
-    const rootHeight = rootBottom - rootTop;
-    const rootMiddle = rootBottom - (rootHeight / 2);
-    const entryMiddle = entry.top + (entry.height / 2);
-    // ??? Test this
-    const value = entryMiddle >= rootMiddle
-        ? (entryMiddle - rootMiddle) / rootMiddle
-        : (rootMiddle - entryMiddle) / rootMiddle;
-    return clamp(0, value, 1);
+    const rootTopY = root.scrollY - (entry.height / 2) + rootMargin;
+    const rootBottomY = root.scrollY + (entry.height / 2) + root.height - rootMargin;
+    const rootHeight = rootBottomY - rootTopY;
+    const rootMiddleY = rootTopY + rootHeight / 2;
+    const entryMiddleY = entry.top + (entry.height / 2);
+    if (entryMiddleY === rootMiddleY)
+        return 1;
+    if (entryMiddleY < rootMiddleY)
+        return 1 - (rootMiddleY - entryMiddleY) / (rootHeight / 2);
+    if (entryMiddleY > rootMiddleY)
+        return 1 + (rootMiddleY - entryMiddleY) / (rootHeight / 2);
 };
 //# sourceMappingURL=scrollListener.js.map

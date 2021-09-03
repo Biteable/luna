@@ -1,5 +1,5 @@
 import { query, queryAll } from "../dom/query"
-import { addScrollListener, intersectionValue, ScrollCallback } from "../util/scrollListener"
+import { addScrollListener, intersectionValue, ScrollCallback, intersectionRatio } from "../util/scrollListener"
 import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
 import { clamp } from "../util/clamp"
@@ -14,9 +14,14 @@ const greenyellow = [173, 255, 47] as RGBA
 const paragraphs = queryAll("p")
 paragraphs.forEach((el, ix, arr) => {
   let prevValue: number
+
+  if (ix === 40) {
+    el.style.outline = "5px solid black"
+  }
+
   const onScroll: ScrollCallback = (data) => {
     const { root } = data
-    const value = intersectionValue(data)
+    const value = intersectionValue(data, 0)
 
     // @note Runs also when value is 0
     // @note Avoids writing if the previous value hasn't changed
@@ -30,6 +35,10 @@ paragraphs.forEach((el, ix, arr) => {
 
 
     const easedValue = easeInOutQuad(value)
+
+    if (ix === 40) {
+      console.log(value)
+    }
 
     // @note interpolate colour based on intersection value
     // @note do as little as possible in the rAF
