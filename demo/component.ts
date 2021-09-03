@@ -1,54 +1,114 @@
-import { find } from "../dom/query"
+import { find, findAll } from "../dom/query"
 import { component } from "../veneer/component"
 import { addScrollListener, removeScrollListener, intersectionRatio } from "../util/scrollListener"
 import { style } from "../dom/style"
 import { stagger } from "../util/stagger"
 
 
-const Apple = component(".Apple", (el) => {
+const Apple = component(".Apple", (el, { setMethods }) => {
   console.log("Init 🍏")
+  const state = {
+    clicks: 0
+  }
+
   const button = find(el, "button")
-  button.addEventListener("click", () => {
-    console.log("🍏")
-  })
+  const count = find(el, "small")
+  const click = () => {
+    state.clicks++
+    count.innerText = state.clicks.toString()
+    console.log(`🍏 ${state.clicks} clicks`)
+  }
+  button.addEventListener("click", click)
+
+  setMethods({ click })
 })
 
 
 const Banana = component(".Banana", (el) => {
   console.log("Init 🍌", el)
-
-  requestAnimationFrame(() => {
-    el.style.opacity = "0"
-  })
-
-  let visible: boolean
-
-  addScrollListener(el, (data) => {
-    if (intersectionRatio(data) > 0.5) {
-
-      // This prevents this running twice. Which is indicative of removeScrollListener not acting fast enough
-      if (visible) return
-      visible = true
-
-      removeScrollListener(el) // Remove all scroll listeners on this element
-
-      stagger("Banana", el, (ix) => {
-        console.log("intersecting", el, ix)
-
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            style(el, {
-              opacity: "",
-              transition: "all 0.5s ease-out",
-            })
-          })
-        }, 20 + 100 * ix)
-      })
-    }
-  })
 })
 
 
+const SaladBowl = component(".SaladBowl", (el, { getMethods }) => {
+  const apples = findAll(el, ".Apple") // There's no magic here. If you mess with DOM after this query (eg delete the apple nodes) you'll still have a reference to these Apples
+  const buttons = findAll(el, "[data-click-apple]")
+  const disconnect = find(el, "[data-disconnect-apples]")
+
+  // Click last apple on mount/init
+  getMethods(apples[apples.length - 1]).then(apple => { apple.click() })
+
+  buttons.forEach((btn, ix) => {
+    btn.addEventListener("click", () => {
+      getMethods(apples[ix]).then(apple => apple.click())
+    })
+  })
+
+  disconnect.addEventListener("click", Apple.disconnect) // Disconnected Apples can still change their own state based on their own eventListeners
+})
+
 // Initiate
+SaladBowl.observe()
 Apple.observe()
 Banana.observe()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const Banana = component(".Banana", (el) => {
+//   console.log("Init 🍌", el)
+
+//   requestAnimationFrame(() => {
+//     el.style.opacity = "0"
+//   })
+
+//   let visible: boolean
+
+//   addScrollListener(el, (data) => {
+//     if (intersectionRatio(data) > 0.5) {
+
+//       // This prevents this running twice. Which is indicative of removeScrollListener not acting fast enough
+//       if (visible) return
+//       visible = true
+
+//       removeScrollListener(el) // Remove all scroll listeners on this element
+
+//       stagger("Banana", el, (ix) => {
+//         console.log("intersecting", el, ix)
+
+//         setTimeout(() => {
+//           requestAnimationFrame(() => {
+//             style(el, {
+//               opacity: "",
+//               transition: "all 0.5s ease-out",
+//             })
+//           })
+//         }, 20 + 100 * ix)
+//       })
+//     }
+//   })
+// })

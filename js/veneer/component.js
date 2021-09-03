@@ -44,6 +44,8 @@ import { exists } from "../util/exists";
 // let initiated: boolean = false
 let entries = [];
 let domObserver = undefined;
+// Register of elements with public methods
+let register = new Map();
 export function component(selector, onmount) {
     return {
         observe() {
@@ -110,6 +112,19 @@ function mountInstance(el, onmount) {
         unmount: (cb) => {
             instance.onunmount = cb; // Mutate instance onunmount callback
         },
+        setMethods: (obj) => {
+            register.set(el, obj);
+        },
+        getMethods: (el) => new Promise((resolve, reject) => {
+            setTimeout(() => {
+                console.log(register);
+                const methods = register.get(el);
+                if (methods)
+                    resolve(methods);
+                else
+                    reject();
+            }, 0); // Push to end of stack to ensure all components are init'ed
+        })
     };
     onmount(el, actions); // Call mount function on element
     return instance;
@@ -119,6 +134,9 @@ function unregisterComponent(selector) {
     if (!entry)
         return;
     const index = entries.indexOf(entry);
+    entries[index].instances.forEach(({ el }) => {
+        register.delete(el);
+    });
     entries.splice(index, 1);
 }
 //# sourceMappingURL=component.js.map

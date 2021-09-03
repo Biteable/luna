@@ -49,6 +49,8 @@ import { exists } from "../util/exists"
 let entries: Entry[] = []
 let domObserver: MutationObserver = undefined
 
+// Register of elements with public methods
+let register: Map<HTMLElement, any> = new Map()
 
 type MountFn = (el: HTMLElement, actions: Actions) => void
 
@@ -66,22 +68,24 @@ interface Entry {
 
 interface Actions {
   unmount: (onUnmount: () => void) => void
+  setMethods: (obj: any) => void
+  getMethods: (el: HTMLElement) => any
 }
 
 
-export function component (selector: string, onmount: MountFn) {
+export function component(selector: string, onmount: MountFn) {
   return {
-    observe () {
+    observe() {
       registerComponent(selector, onmount)
     },
-    disconnect () {
+    disconnect() {
       unregisterComponent(selector)
     },
   }
 }
 
 
-export function update () {
+export function update() {
   entries = entries.map(entry => {
     const mountedEls: HTMLElement[] = []
 
@@ -98,20 +102,20 @@ export function update () {
       return instances
     }, [])
 
-    // Handle elements newly added to the DOM
-    ;([].slice.call(entry.liveList) as HTMLElement[]).forEach(el => {
-      if (!mountedEls.includes(el)) {
-        // Mount new found component elements
-        entry.instances.push(mountInstance(el, entry.onmount))
-      }
-    })
+      // Handle elements newly added to the DOM
+      ; ([].slice.call(entry.liveList) as HTMLElement[]).forEach(el => {
+        if (!mountedEls.includes(el)) {
+          // Mount new found component elements
+          entry.instances.push(mountInstance(el, entry.onmount))
+        }
+      })
 
     return entry
   })
 }
 
 
-function registerComponent (selector: string, onmount: MountFn) {
+function registerComponent(selector: string, onmount: MountFn) {
   if (!selector.startsWith(".") || selector.includes(" ")) {
     console.error(`Class selectors only please; eg ".Component"`)
     return
@@ -139,7 +143,7 @@ function registerComponent (selector: string, onmount: MountFn) {
 }
 
 
-function mountInstance (el: HTMLElement, onmount: MountFn) {
+function mountInstance(el: HTMLElement, onmount: MountFn) {
   const instance: EntryInstance = {
     el: el,
     onunmount: () => { }
@@ -149,6 +153,17 @@ function mountInstance (el: HTMLElement, onmount: MountFn) {
     unmount: (cb) => {
       instance.onunmount = cb // Mutate instance onunmount callback
     },
+    setMethods: (obj) => {
+      register.set(el, obj)
+    },
+    getMethods: (el) => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log(register)
+        const methods = register.get(el)
+        if (methods) resolve(methods)
+        else reject()
+      }, 0); // Push to end of stack to ensure all components are init'ed
+    })
   }
 
   onmount(el, actions) // Call mount function on element
@@ -157,9 +172,12 @@ function mountInstance (el: HTMLElement, onmount: MountFn) {
 }
 
 
-function unregisterComponent (selector: string) {
+function unregisterComponent(selector: string) {
   const entry = entries.find((entry) => entry.selector === selector)
   if (!entry) return
   const index = entries.indexOf(entry)
+  entries[index].instances.forEach(({ el }) => {
+    register.delete(el)
+  })
   entries.splice(index, 1)
 }
