@@ -158,7 +158,6 @@ function mountInstance(el: HTMLElement, onmount: MountFn) {
     },
     getMethods: (el) => new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log(register)
         const methods = register.get(el)
         if (methods) resolve(methods)
         else reject()

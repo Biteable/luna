@@ -24,23 +24,35 @@ const Apple = component(".Apple", (el, { setMethods }) => {
 })
 
 
-const Banana = component(".Banana", (el) => {
-  console.log("Init 🍌", el)
+const Banana = component(".Banana", (el, { getMethods }) => {
+  // console.log("Init 🍌", el)
+  const button = find(el, "button")
+
+  const SaladBowl = el.closest(".SaladBowl") as HTMLElement
+  if (SaladBowl) {
+    button.addEventListener("click", () => getMethods(SaladBowl).then(salad => salad.logFruit()))
+  } else {
+    console.log("Not in a salad bowl")
+  }
 })
 
 
-const SaladBowl = component(".SaladBowl", (el, { getMethods }) => {
+const SaladBowl = component(".SaladBowl", (el, { getMethods, setMethods }) => {
   const apples = findAll(el, ".Apple") // There's no magic here. If you mess with DOM after this query (eg delete the apple nodes) you'll still have a reference to these Apples
   const buttons = findAll(el, "[data-click-apple]")
   const disconnect = find(el, "[data-disconnect-apples]")
 
   // Click last apple on mount/init
-  getMethods(apples[apples.length - 1]).then(apple => { apple.click() })
+  getMethods(apples[apples.length - 1]).then(methods => methods.click())
 
   buttons.forEach((btn, ix) => {
     btn.addEventListener("click", () => {
-      getMethods(apples[ix]).then(apple => apple.click())
+      getMethods(apples[ix]).then(methods => methods.click())
     })
+  })
+
+  setMethods({
+    logFruit: () => console.log(findAll(el, ".Apple, .Banana")),
   })
 
   disconnect.addEventListener("click", Apple.disconnect) // Disconnected Apples can still change their own state based on their own eventListeners
