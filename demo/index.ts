@@ -1,14 +1,10 @@
-import { query, queryAll, find, findAll, queries } from "../dom/query"
+import { query, queryAll, find, findAll } from "../dom/query"
 import { style, styles } from "../dom/style"
 import { addClass, addsClass, removeClass, removesClass } from "../dom/class"
 import { pipe, pipes } from "../util/pipe"
 
 const el = query("#one")
 const els = queryAll(".many")
-
-
-const queryOne = queries("#one")
-pipe(queryOne, addsClass("solo"))
 
 // const child = find(el, ".child")
 
