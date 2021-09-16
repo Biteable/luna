@@ -1,5 +1,5 @@
 import { transition } from "../wip/transition"
-import { query } from "../dom/query"
+import { query } from "../dom"
 import { addClass, removeClass } from "../dom/class"
 // import {  }
 

@@ -1,4 +1,4 @@
-import { query } from "../dom/query"
+import { query } from "../dom"
 import { draggable } from "../util/draggable"
 import { clamp } from "../util/clamp"
 

@@ -1,6 +1,5 @@
-import { offset as getOffset, OffsetData } from "../dom/offset"
-import { clamp } from "./clamp"
-import { debounce } from "./debounce"
+import { offset as getOffset, OffsetData } from "../dom"
+import { clamp, debounce } from "../util"
 
 
 interface RootData {

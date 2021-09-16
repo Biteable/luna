@@ -1,4 +1,4 @@
-import { find, findAll } from "../dom/query"
+import { find, findAll } from "../dom"
 import { component } from "../veneer/component"
 import { addScrollListener, removeScrollListener, intersectionRatio } from "../util/scrollListener"
 import { style } from "../dom/style"

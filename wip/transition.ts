@@ -19,9 +19,9 @@ https://gist.github.com/jakearchibald/0b50c4918eaf9a67bfcfa55e7e61cd56
 */
 
 interface Args {
-  setup?: () => void,
-  trigger?: () => void,
-  end?: () => void,
+  setup?: () => void, // add is-transitioning class
+  trigger?: () => void, // change state classes/attributes
+  end?: () => void, // remove is-transitiong class
   // watch?: [any],
 }
 
@@ -37,7 +37,7 @@ export function transition (el: HTMLElement, args: Args) {
   const transitionrun = "transitionrun"
 
   /*
-    An element won't fire "transitionrun" and "transitionend" events if it's not goint to transition.
+    An element won't fire "transitionrun" and "transitionend" events if it's not going to transition.
     This lack of events will happen when:
     - [ ] When the state doesn't change, ie you're transitioning to opacity: 1 and the opacity is already 1
     - [ ] A duration of 0? What about when there's a delay?

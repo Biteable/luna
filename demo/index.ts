@@ -1,44 +1,19 @@
-import { query, queryAll, find, findAll } from "../dom/query"
-import { style, styles } from "../dom/style"
-import { addClass, addsClass, removeClass, removesClass } from "../dom/class"
-import { pipe, pipes } from "../util/pipe"
+import { query, queryAll, find, findAll, addClass, removeClass, css } from "../dom"
 
 const el = query("#one")
 const els = queryAll(".many")
 
-// const child = find(el, ".child")
-
 // Add styles to a single el.
-style(el, { top: "100px", left: "" })
-
-// Piping
-pipe(el,
-  styles({ left: "" }),
-  removesClass("previous"),
-  addsClass("current"),
-  styles({ top: "100%", opacity: "1" })
-)
-
-// Same as:
-const setCurrent = pipes(
-  styles({ left: "" }),
-  removesClass("previous"),
-  addsClass("current"),
-  styles({ top: "100%", opacity: "1" })
-)
-setCurrent(el)
-
+css(el, { top: "100px", left: "" })
 
 // Many
-els.map(x => style(x, { left: "" }))        // Remove inline styles from all
-  .map(x => removeClass(x, "active"))       // Remove active class from all
-  .filter(x => x === el)                    // Filter list to just #one
-  .map(el => addClass(el, "active"))        // Add active class to #one
-  .map(el => style(el, { left: "100px" }))  // Add styles to #one
+els
+  .map(x => css(x, { left: "" }))      // Remove inline css from all
+  .map(x => removeClass(x, "active"))   // Remove active class from all
+// .filter(x => x === el)                // Filter list to just #one
+// .map(x => addClass(x, "active"))      // Add active class to #one
+// .map(x => css(x, { left: "100px" }))  // Add styles to #one
 
-// Many using curried functions
-els.map(styles({ left: "" }))
-  .map(removesClass("active"))
-  .filter(x => x === el)
-  .map(addsClass("active"))
-  .map(styles({ left: "100px" }))
+// Single
+addClass(el, "active")
+css(el, { left: "100px" })

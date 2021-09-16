@@ -5,7 +5,16 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es2016",
-    "outDir": "./js/"
+    "outDir": "./dist/",
+    "moduleResolution": "node"
   },
-  "include": ["dom/**/*", "math/**/*", "util/**/*", "wip/**/*", "veneer/**/*", "other/**/*"]
+  "include": [
+    "dom/**/*",
+    "math/**/*",
+    "util/**/*",
+    "wip/**/*",
+    "veneer/**/*",
+    "easings/**/*",
+    "scrollListener/**/*"
+  ]
 }

@@ -42,7 +42,7 @@ component(".AnimateWhenFirstVisible", (el, on) => {
 
 
 import { debounce } from "../util/debounce"
-import { exists } from "../util/exists"
+import { exists } from "../dom"
 
 
 // let initiated: boolean = false

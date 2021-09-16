@@ -1,4 +1,4 @@
-import { query, queryAll } from "../dom/query"
+import { query, queryAll } from "../dom"
 import { addScrollListener, intersectionValue, ScrollCallback, intersectionRatio } from "../util/scrollListener"
 import { interpolateRGB, RGBA } from "../wip/color"
 import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"

@@ -17,7 +17,7 @@ See also `Element.scrollWidth`
 
 */
 
-interface OffsetData {
+export interface OffsetData {
   top: number
   bottom: number
   left: number
@@ -26,7 +26,7 @@ interface OffsetData {
   height: number
 }
 
-const offset = (el: HTMLElement): OffsetData => {
+export const offset = (el: HTMLElement): OffsetData => {
   let top = 0
   let left = 0
   const width = el.offsetWidth
@@ -50,6 +50,3 @@ const offset = (el: HTMLElement): OffsetData => {
 
   return { top, bottom, left, right, width, height }
 }
-
-export { OffsetData }
-export { offset }
