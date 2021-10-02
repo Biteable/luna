@@ -34,6 +34,8 @@ nvm use
 yarn build # note demos not built here, see yarn demos
 ```
 
+Note that `/demos/**.*ts` get built (but git ignored) so that we have typescript's error reporting, but `esbuild`'s speed and convenience for bundling for the browser.
+
 Watch: `nvm use` then separate terminal windows for `yarn watch`, `yarn demos`, and `yarn serve`.
 
 
