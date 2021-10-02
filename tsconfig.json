@@ -9,12 +9,12 @@
     "moduleResolution": "node"
   },
   "include": [
+    "demo/**/*",
     "dom/**/*",
-    "math/**/*",
-    "util/**/*",
-    "wip/**/*",
-    "veneer/**/*",
     "easings/**/*",
-    "scrollListener/**/*"
+    "scrollListener/**/*",
+    "util/**/*",
+    "veneer/**/*",
+    "wip/**/*"
   ]
 }

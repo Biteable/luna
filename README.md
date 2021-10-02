@@ -10,11 +10,11 @@ Install using a specific commit hash; eg
 npm install https://github.com/dominicwhittle/luna#commitsha
 ```
 
-Both TypeScript and JavaScript are included, with the JavaScript versions in the `js` directory.
+Both TypeScript and JavaScript are included, with the JavaScript versions in the `dist` directory.
 
 In your scripts:
 
-`import { addClass } from "luna/dom/class"` or `import { addClass } from "luna/js/dom/class" for the TypeScript and Javascript versions respectively.
+`import { addClass } from "luna/dom/class"` or `import { addClass } from "luna/dist/dom/class" for the TypeScript and Javascript versions respectively.
 
 You will likely want to use a bundler like browserify, es-build, webpack etc to build your code for use in the browser.
 
@@ -31,28 +31,16 @@ Build:
 
 ```
 nvm use
-yarn build
+yarn build # note demos not built here, see yarn demos
 ```
 
-Watch:
+Watch: `nvm use` then separate terminal windows for `yarn watch`, `yarn demos`, and `yarn serve`.
+
+
+### Bundling notes
+
+For specific browser targetting you might want to try something like:
 
 ```
-nvm use
-yarn watch
-```
-
-### Building demo code
-
-`yarn demo-index` and `yarn demo-scroll` will bundle the respective code in the `demo` dir for the browser.
-
-To view the demo html files:
-
-```
-yarn serve-demos
-```
-
-For specific browser targetting you might want to try:
-
-```
-npx esbuild demo/scroll.ts --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge79 --outfile=demo/scroll.bundle.js
+npx esbuild example/script.ts --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge79 --outfile=example/script.bundle.js
 ```

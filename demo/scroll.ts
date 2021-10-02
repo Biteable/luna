@@ -1,7 +1,7 @@
 import { query, queryAll } from "../dom"
-import { addScrollListener, intersectionValue, ScrollCallback, intersectionRatio } from "../util/scrollListener"
+import { addScrollListener, intersectionValue, ScrollCallback, intersectionRatio } from "../scrollListener"
 import { interpolateRGB, RGBA } from "../wip/color"
-import { easeInOutQuad, easeOutQuad, easeInQuad } from "../util/easings"
+import { easeInOutQuad, easeOutQuad, easeInQuad } from "../easings"
 import { clamp } from "../util/clamp"
 import { stagger } from "../util/stagger"
 

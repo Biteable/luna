@@ -1,8 +1,5 @@
 import { find, findAll } from "../dom"
 import { component } from "../veneer/component"
-import { addScrollListener, removeScrollListener, intersectionRatio } from "../util/scrollListener"
-import { style } from "../dom/style"
-import { stagger } from "../util/stagger"
 
 
 const Apple = component(".Apple", (el, { setMethods }) => {
