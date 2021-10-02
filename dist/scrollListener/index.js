@@ -51,10 +51,10 @@ function onScroll() {
 }
 export function addScrollListener(target, cb) {
     // Don't subscribe the same callback + element multiple times
-    // @todo throw error
-    if (entries.some((obj) => obj.entry.target === target && obj.cb === cb))
+    if (entries.some((obj) => obj.entry.target === target && obj.cb === cb)) {
+        console.error("addScrollListener: target already subscribed with callback");
         return;
-    // @todo measure at a better time?
+    }
     const entry = Object.assign({ target }, getOffset(target));
     entries.push({ entry, cb });
     if (!initiated) {
