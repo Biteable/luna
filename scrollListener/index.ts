@@ -33,7 +33,6 @@ interface ScrollData {
 }
 
 export type ScrollCallback = (data: ScrollData) => any
-type Threshold = number // @todo... remove? Implement in `intersection` method
 type Direction = "DOWN" | "UP"
 export const DOWN: Direction = "DOWN"
 export const UP: Direction = "UP"
