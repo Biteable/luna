@@ -10,7 +10,7 @@
     "demos": "esbuild demo/*.ts --bundle --minify --watch --sourcemap --outdir=demo",
     "serve": "http-server ./demo --port 8080"
   },
-  "dependencies": {
+  "devDependencies": {
     "csstype": "^3.0.9",
     "esbuild": "^0.13.3",
     "http-server": "^13.0.2",
