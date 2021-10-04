@@ -39,13 +39,9 @@ function onScroll() {
     root.scrollX = window.scrollX;
     root.scrollY = window.scrollY;
     root.direction = window.scrollY >= lastScrollY ? DOWN : UP;
-    // Iterate in reverse order so that elements that are removed don't mess the indexes of other entries
+    // Iterate in reverse order. Elements can be removed (and possibly added) from callbacks originating within this loop.
     for (let i = length - 1; i >= 0; i--) {
-        // Check the tracked item still exists. This is necessary because removeScrollListener can be called during this loop (eg in the tracked item callback) which mutates the tracked array and can change the length mid-loop.
-        const obj = entries[i];
-        if (!obj)
-            continue;
-        const { entry, cb } = obj;
+        const { entry, cb } = entries[i];
         cb({ entry, root });
     }
 }
