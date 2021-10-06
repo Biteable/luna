@@ -9,13 +9,6 @@
     "moduleResolution": "node"
   },
   "include": [
-    "index.ts",
-    "demo/**/*",
-    "dom/**/*",
-    "easings/**/*",
-    "scrollListener/**/*",
-    "util/**/*",
-    "veneer/**/*",
-    "wip/**/*"
+    "src/**/*"
   ]
 }
