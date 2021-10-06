@@ -1,0 +1,10 @@
+export declare const tab = 9;
+export declare const ctrl = 17;
+export declare const enter = 13;
+export declare const alt = 18;
+export declare const esc = 27;
+export declare const space = 32;
+export declare const arrowLeft = 37;
+export declare const arrowUp = 38;
+export declare const arrowRight = 39;
+export declare const arrowDown = 40;
