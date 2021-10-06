@@ -137,7 +137,7 @@ const calculateTransforms = (
   }
 }
 
-function motion2 (el: HTMLElement, trigger: string) {
+export function motion2 (el: HTMLElement, trigger: string) {
   requestAnimationFrame(() => {
 
     // F.L.I.P.
@@ -260,7 +260,7 @@ function motion2 (el: HTMLElement, trigger: string) {
 }
 
 
-const motion = (el: HTMLElement, className: string) => {
+export const motion = (el: HTMLElement, className: string) => {
   const childEls = Array.from(el.children) as HTMLElement[]
 
   // requestAnimationFrame(() => {})
@@ -316,18 +316,3 @@ const motion = (el: HTMLElement, className: string) => {
   }
 }
 
-const runBtn = document.querySelector("[data-run]") as HTMLButtonElement
-const card = document.querySelector(".befaux .card") as HTMLElement
-
-const motionBtns = Array.from(document.querySelectorAll("[data-motion]")) as HTMLButtonElement[]
-const testEls = Array.from(document.querySelectorAll(".befaux > div")) as HTMLElement[]
-
-motionBtns.forEach((el, ix) => {
-  el.addEventListener("click", () => {
-    motion2(testEls[ix], "end")
-  })
-})
-
-runBtn.addEventListener("click", () => {
-  motion(card, "end")
-})

@@ -1,15 +1,15 @@
 {
   "name": "luna",
   "version": "0.1.2",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "repository": "git@github.com:dominicwhittle/luna.git",
   "license": "MIT",
   "scripts": {
     "build": "npx tsc --declaration",
     "watch": "npx tsc -w & yarn",
-    "demos": "esbuild demo/*.ts --bundle --minify --watch --sourcemap --outdir=demo",
-    "serve": "http-server ./demo --port 8080"
+    "demos": "esbuild src/demo/*.ts --bundle --minify --watch --sourcemap --outdir=src/demo",
+    "serve": "http-server ./src/demo --port 8080"
   },
   "devDependencies": {
     "csstype": "^3.0.9",

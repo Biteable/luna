@@ -5,10 +5,11 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es2016",
-    "outDir": "./dist/",
+    "outDir": "./",
     "moduleResolution": "node"
   },
   "include": [
     "src/**/*"
-  ]
+  ],
+  "exclude": [ ]
 }
